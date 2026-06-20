@@ -214,6 +214,47 @@ public function update3(StoreProductRequest $request, int $id): JsonResponse
     ], 200);
 }
 
+    public function store4(Request $request, Product $product)
+    {
+        if ($request->user()->role !== 'seller') {
+        return response()->json([
+            'message' => 'Hanya seller yang dapat menambah produk'
+        ], 403);
+    }
+
+        if ($product->delete()){
+
+            return response()->json([
+                'message' => 'Produk Berhasil di Hapus'
+                ], 200);
+
+            }
+
+        return response()->json([
+            'message' => 'Seller boleh menambah produk'
+        ], 200);
+
+
+    }
+
+    public function update4(Request $request, Product $product)
+    {
+
+    if ($product->seller_id !== $request->user()->id) {
+        return response()->json([
+            'message' => 'Bukan pemilik produk'
+        ], 403);
+
+
+
+        }
+        return response()->json([
+           'message' => 'seller update produk'
+       ], 200);
+
+    }
+
+
 
 
 }

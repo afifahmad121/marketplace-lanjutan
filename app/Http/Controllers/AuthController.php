@@ -70,7 +70,7 @@ class AuthController extends Controller
                 ]);
             }
 
-            public function update(Request $request, Product $product){
+            public function update4(Request $request, Product $product){
                 if ($request -> user()->role !== 'seller'){
                 return response()->json([
                     'message' => 'Akses Ditolak'

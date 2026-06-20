@@ -1,8 +1,10 @@
 <?php
-
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoriesController;
+
+use App\Http\Controllers\AuthController;
+
+
 
 
 use Illuminate\Http\Request;
@@ -19,7 +21,12 @@ Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
+    Route::post('auth/products', [ProductsController::class, 'store4']);
+    Route::put('auth/products/{product}', [AuthController::class,'update']);
 
+    Route::post('/categories', [ProductCategoriesController::class, 'store2']);
+    Route::put('/categories/{categorys}', [ProductCategoriesController::class, 'update2']);
+    Route::delete('/categories/{categorys}', [ProductCategoriesController::class, 'destroy']);
 
 
 });
@@ -42,8 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
  Route::get('/categories/{categorys}', [ProductCategoriesController::class, 'show']);
  Route::post('/categories', [ProductCategoriesController::class, 'store']);
  Route::put('/categories/{categorys}', [ProductCategoriesController::class, 'update']);
- Route::delete('/categories/{categories}', [ProductCategoriesController::class, 'destroy']);
+
  Route::get('/categories/{categorys}', [ProductCategoriesController::class, 'shows']);
 
- Route::post('/categories', [ProductCategoriesController::class, 'store2']);
- Route::put('/categories/{categorys}', [ProductCategoriesController::class, 'update2']);
+

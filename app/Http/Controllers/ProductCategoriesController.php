@@ -134,6 +134,8 @@ public function update2(StoreProductCategoryRequest $request, int $id): JsonResp
     ], 200);
 }
 
+
+
 }
 
 
