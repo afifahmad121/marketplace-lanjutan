@@ -17,6 +17,8 @@ class AuthController extends Controller
         'password'=> 'required|string|min:6|confirmed',
         'role' => 'required|in:seller,buyer',
 
+
+
             ]);
             $validated['balance'] = 0;
 
@@ -25,9 +27,9 @@ class AuthController extends Controller
                 'username' => $validated['username'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
-                'role' => $validated['role']
+                'role' => $validated['role'],
+                'balance' => $validated['balance']
             ]);
-
             $token = $user->createToken('auth-token')->plainTextToken;
             return response()->json([
 

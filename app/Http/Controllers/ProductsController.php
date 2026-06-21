@@ -24,10 +24,10 @@ class ProductsController extends Controller
         }
 
 
-        public function show(Product $products): JsonResponse
+        public function show(Product $product): JsonResponse
         {
 
-            return $this->successResponse($products);
+            return $this->successResponse($product);
             }
 
 
@@ -78,10 +78,15 @@ class ProductsController extends Controller
         'category_id' => 'required|exists:product_categories,id',
         'file_path' => 'required|string',
         'thumbnail'   => 'nullable|string',
-        'status' => 'in:active,inactive'
+        'status' => 'in:active,inactive',
+
+    ]);
 
 
-        ]);
+
+
+
+
         $validated['seller_id'] = \App\Models\User::first()->id ?? 1;
         $product = Product::create($validated);
         return $this->successResponse($product, 'Pesan sukses');
@@ -172,6 +177,20 @@ class ProductsController extends Controller
 
     public function store3(StoreProductRequest $request)
 {
+
+// $validated = $request->validate([
+//         'title'          => 'required|string|max:255',
+//         'description'    => 'nullable|string',
+//         'price'          => 'required|numeric|min:0',
+//         'rating'         => 'nullable|numeric|min:0|max:5',
+//         'thumbnail'      => 'nullable|string',
+//         'file_path'      => 'nullable|string',
+//         'download_count' => 'nullable|integer|min:0',
+//         'status'         => 'required|in:active,inactive',
+//         'category_id'    => 'required|exists:product_categories,id',
+//     ]);
+
+//     $validated['seller_id'] = $request->user()->id;
 
     $validatedData = $request->validated();
 

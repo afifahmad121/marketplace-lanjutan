@@ -19,9 +19,9 @@ class ProductCategoriesController extends Controller
         return $this->successResponse($categorys);
 
         }
-        public function show(ProductCategory $categorys): JsonResponse
+        public function show(ProductCategory $category): JsonResponse
         {
-            return $this->successResponse($categorys);
+            return $this->successResponse($category);
         }
 
         public function store(Request $request): JsonResponse
