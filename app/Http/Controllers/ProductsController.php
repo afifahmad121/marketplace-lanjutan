@@ -14,266 +14,228 @@ use Illuminate\Validation\ValidationException;
 
 class ProductsController extends Controller
 {
-
     use ApiResponse;
 
-    public function index(): JsonResponse{
+    public function index(): JsonResponse
+    {
         $products = Product::all();
         return $this->successResponse($products);
+    }
 
-        }
+    public function show(Product $product): JsonResponse
+    {
+        return $this->successResponse($product);
+    }
 
+    //     public function store(Request $request): JsonResponse
+    //     {
 
-        public function show(Product $product): JsonResponse
-        {
+    //         //Menambahkan produk baru (hanya seller)
+    //         $validated = $request->validate([
 
-            return $this->successResponse($product);
-            }
+    //             'title'       => ['required', 'string', 'max:100'],
+    //             'description' => ['nullable', 'string'],
+    //             'price'       => ['required', 'numeric'],
+    //             'rating'      => ['required', 'numeric'],
+    //             'thumbnail'   => ['required', 'string', 'max:100'],
+    //             'file_path'   => ['nullable', 'string', 'max:100'],
+    //             'download_count' =>['nullable','numeric'],
+    //             'status'      => ['nullable', 'string', 'max:100'],
+    //             'seller_id'   => ['required', 'exists:users,id'],
+    //             'category_id' => ['required', 'exists:product_categories,id']
 
+    // ]);
 
+    // $product = Product::create($validated);
+    // return $this->successResponse($product, 'Pesan sukses');
 
-        //     public function store(Request $request): JsonResponse
-        //     {
+    // }
 
-        //         //Menambahkan produk baru (hanya seller)
-        //         $validated = $request->validate([
-
-
-
-
-        //             'title'       => ['required', 'string', 'max:100'],
-        //             'description' => ['nullable', 'string'],
-        //             'price'       => ['required', 'numeric'],
-        //             'rating'      => ['required', 'numeric'],
-        //             'thumbnail'   => ['required', 'string', 'max:100'],
-        //             'file_path'   => ['nullable', 'string', 'max:100'],
-        //             'download_count' =>['nullable','numeric'],
-        //             'status'      => ['nullable', 'string', 'max:100'],
-        //             'seller_id'   => ['required', 'exists:users,id'],
-        //             'category_id' => ['required', 'exists:product_categories,id']
-
-
-
-
-        // ]);
-
-        // $product = Product::create($validated);
-        // return $this->successResponse($product, 'Pesan sukses');
-
-        // }
-
-
-        public function store2(Request $request): JsonResponse
-
-        {
-
+    public function store2(Request $request): JsonResponse
+    {
         $validated = $request->validate([
-
-
-
-        'title'       => 'required|string|max:255',
-        'description' => 'required|string',
-        'price'       => 'required|numeric|min:0',
-        'rating'      => 'required|numeric|min:0|max:10',
-        'category_id' => 'required|exists:product_categories,id',
-        'file_path' => 'required|string',
-        'thumbnail'   => 'nullable|string',
-        'status' => 'in:active,inactive',
-
-    ]);
-
-
-
-
-
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'rating' => 'required|numeric|min:0|max:10',
+            'category_id' => 'required|exists:product_categories,id',
+            'file_path' => 'required|string',
+            'thumbnail' => 'nullable|string',
+            'status' => 'in:active,inactive',
+        ]);
 
         $validated['seller_id'] = \App\Models\User::first()->id ?? 1;
         $product = Product::create($validated);
         return $this->successResponse($product, 'Pesan sukses');
+    }
 
+    // public function update(Request $request, Product $product): JsonResponse
+    //     {
+    //         $validated = $request->validate([
 
+    //         'title'       => ['required', 'string', 'max:100'],
+    //         'description' => ['nullable', 'string'],
+    //         'price'       => ['required', 'numeric'],
+    //         'rating'      => ['required', 'numeric'],
+    //         'thumbnail'   => ['required', 'string', 'max:100'],
+    //         'file_path'   => ['nullable', 'string', 'max:100'],
+    //         'download_count' =>['nullable','numeric'],
+    //         'status'      => ['nullable', 'string', 'max:100'],
+    //         'seller_id'   => ['required', 'exists:users,id'],
+    //         'category_id' => ['required', 'exists:product_categories,id']
 
-        }
+    //         ]);
 
-
-
-
-// public function update(Request $request, Product $product): JsonResponse
-//     {
-//         $validated = $request->validate([
-
-//         'title'       => ['required', 'string', 'max:100'],
-//         'description' => ['nullable', 'string'],
-//         'price'       => ['required', 'numeric'],
-//         'rating'      => ['required', 'numeric'],
-//         'thumbnail'   => ['required', 'string', 'max:100'],
-//         'file_path'   => ['nullable', 'string', 'max:100'],
-//         'download_count' =>['nullable','numeric'],
-//         'status'      => ['nullable', 'string', 'max:100'],
-//         'seller_id'   => ['required', 'exists:users,id'],
-//         'category_id' => ['required', 'exists:product_categories,id']
-
-
-
-//         ]);
-
-//         // UPDATE data
-//         $product->update($validated);
-//         return $this->successResponse($product,'pesan sukses');
+    //         // UPDATE data
+    //         $product->update($validated);
+    //         return $this->successResponse($product,'pesan sukses');
     // }
 
-
-
-
-     public function update2(Request $request, Product $product): JsonResponse
+    public function update2(Request $request, Product $product): JsonResponse
     {
-
         $validated = $request->validate([
-
-        'title'       => 'required|string|max:255',
-        'description' => 'required|string',
-        'price'       => 'required|numeric|min:0',
-        'rating'      => 'required|numeric|min:0|max:10',
-        'category_id' => 'required|exists:product_categories,id',
-        'file_path' => 'required|string',
-        'thumbnail'   => 'nullable|string',
-        'status' => 'in:active,inactive'
-
-
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'rating' => 'required|numeric|min:0|max:10',
+            'category_id' => 'required|exists:product_categories,id',
+            'file_path' => 'required|string',
+            'thumbnail' => 'nullable|string',
+            'status' => 'in:active,inactive',
         ]);
 
         // UPDATE data
         $product->update($validated);
         $validated['seller_id'] = \App\Models\User::first()->id ?? 1;
-        return $this->successResponse($product,'pesan sukses');
+        return $this->successResponse($product, 'pesan sukses');
     }
 
-
-
-        // DELETE data
-        public function destroy(Product $product): JsonResponse
+    // DELETE data
+    public function destroy(Product $product): JsonResponse
     {
         $product->delete();
 
         return $this->successResponse(message: 'Data berhasil dihapus');
     }
 
+    // membuat message eror
+    public function shows(int $id)
+    {
+        $product = product::find($id);
 
-     // membuat message eror
-    public function shows(int $id){
-
-         $product = product::find($id);
-
-       if(!$product){
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Data tidak ditemukan'
-        ], 404);
-       }
-
-
+        if (!$product) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Data tidak ditemukan',
+                ],
+                404,
+            );
+        }
     }
 
     public function store3(StoreProductRequest $request)
-{
+    {
+        // $validated = $request->validate([
+        //         'title'          => 'required|string|max:255',
+        //         'description'    => 'nullable|string',
+        //         'price'          => 'required|numeric|min:0',
+        //         'rating'         => 'nullable|numeric|min:0|max:5',
+        //         'thumbnail'      => 'nullable|string',
+        //         'file_path'      => 'nullable|string',
+        //         'download_count' => 'nullable|integer|min:0',
+        //         'status'         => 'required|in:active,inactive',
+        //         'category_id'    => 'required|exists:product_categories,id',
+        //     ]);
 
-// $validated = $request->validate([
-//         'title'          => 'required|string|max:255',
-//         'description'    => 'nullable|string',
-//         'price'          => 'required|numeric|min:0',
-//         'rating'         => 'nullable|numeric|min:0|max:5',
-//         'thumbnail'      => 'nullable|string',
-//         'file_path'      => 'nullable|string',
-//         'download_count' => 'nullable|integer|min:0',
-//         'status'         => 'required|in:active,inactive',
-//         'category_id'    => 'required|exists:product_categories,id',
-//     ]);
+        //     $validated['seller_id'] = $request->user()->id;
 
-//     $validated['seller_id'] = $request->user()->id;
+        $validatedData = $request->validated();
 
-    $validatedData = $request->validated();
+        $product = Product::create($validatedData);
 
-
-    $product = Product::create($validatedData);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Produk berhasil ditambahkan',
-        'data'    => $product
-    ], 201);
-}
-
-
-// Fungsi untuk Update Data (PUT)
-public function update3(StoreProductRequest $request, int $id): JsonResponse
-{
-
-    $product = Product::find($id);
-
-
-    if (!$product) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Data tidak ditemukan untuk diupdate'
-        ], 404);
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Produk berhasil ditambahkan',
+                'data' => $product,
+            ],
+            201,
+        );
     }
 
+    // Fungsi untuk Update Data (PUT)
+    public function update3(StoreProductRequest $request, int $id): JsonResponse
+    {
+        $product = Product::find($id);
 
-    $validatedData = $request->validated();
+        if (!$product) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Data tidak ditemukan untuk diupdate',
+                ],
+                404,
+            );
+        }
 
+        $validatedData = $request->validated();
 
-    $product->update($validatedData);
+        $product->update($validatedData);
 
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Produk berhasil diperbarui',
-        'data'    => $product
-    ], 200);
-}
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Produk berhasil diperbarui',
+                'data' => $product,
+            ],
+            200,
+        );
+    }
 
     public function store4(Request $request, Product $product)
     {
         if ($request->user()->role !== 'seller') {
-        return response()->json([
-            'message' => 'Hanya seller yang dapat menambah produk'
-        ], 403);
-    }
+            return response()->json(
+                [
+                    'message' => 'Hanya seller yang dapat menambah produk',
+                ],
+                403,
+            );
+        }
 
-        if ($product->delete()){
+        if ($product->delete()) {
+            return response()->json(
+                [
+                    'message' => 'Produk Berhasil di Hapus',
+                ],
+                200,
+            );
+        }
 
-            return response()->json([
-                'message' => 'Produk Berhasil di Hapus'
-                ], 200);
-
-            }
-
-        return response()->json([
-            'message' => 'Seller boleh menambah produk'
-        ], 200);
-
-
+        return response()->json(
+            [
+                'message' => 'Seller boleh menambah produk',
+            ],
+            200,
+        );
     }
 
     public function update4(Request $request, Product $product)
     {
-
-    if ($product->seller_id !== $request->user()->id) {
-        return response()->json([
-            'message' => 'Bukan pemilik produk'
-        ], 403);
-
-
-
+        if ($product->seller_id !== $request->user()->id) {
+            return response()->json(
+                [
+                    'message' => 'Bukan pemilik produk',
+                ],
+                403,
+            );
         }
-        return response()->json([
-           'message' => 'seller update produk'
-       ], 200);
-
+        return response()->json(
+            [
+                'message' => 'seller update produk',
+            ],
+            200,
+        );
     }
-
-
-
-
 }
