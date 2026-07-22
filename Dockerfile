@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     curl \
+    
     libzip-dev \
     libicu-dev \
     && docker-php-ext-install \
