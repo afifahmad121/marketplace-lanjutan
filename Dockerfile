@@ -1,57 +1,45 @@
-# ==========================
-# Stage 1 - Composer
-# ==========================
-FROM composer:2 AS composer
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-
-RUN composer install \
-    --no-dev \
-    --prefer-dist \
-    --no-interaction \
-    --optimize-autoloader
-
-COPY . .
-
-RUN composer dump-autoload --optimize
-
-# ==========================
-# Stage 2 - PHP 8.4 Apache
-# ==========================
 FROM php:8.4-apache
 
 WORKDIR /var/www/html
 
-# Install extension Laravel
+# Install system packages & PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     zip \
+    curl \
     libzip-dev \
     libicu-dev \
     && docker-php-ext-install \
         pdo_mysql \
-        bcmath \
         intl \
-        zip
-
+        zip \
+        bcmath
 
 # Enable Apache Rewrite
 RUN a2enmod rewrite
 
+# Install Composer
+COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+
 # Copy project
-COPY --from=composer /app /var/www/html
+COPY . .
 
-# Laravel permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Install dependencies
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
 
-# Apache DocumentRoot -> public
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+# Set Apache DocumentRoot
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf
+
+# Permission Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 80
 
